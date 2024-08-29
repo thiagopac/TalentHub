@@ -1,0 +1,174 @@
+﻿@using TalentHub.Helpers
+@model PaginatedList<TalentHub.Models.Projeto>
+
+@{
+    ViewData["Title"] = "Resultados da busca";
+}
+
+<div class="home-content mb-5">
+    <div class="top-bar d-flex align-items-center">
+        <div class="w-100 text-center fs-1 fw-bold text-white mb-5">Buscar projetos</div>
+    </div>
+
+    <div class="search-container">
+        <div class="search-card py-4 px-4">
+            <form asp-controller="Projetos" asp-action="BuscarProjeto" method="get">
+                <div class="input-group d-flex align-items-center">
+                    <div class="input-group-prepend">
+                        <span>
+                            <img src="~/images/magnifier@100x100.png" alt="Buscar" height="50" />
+                        </span>
+                    </div>
+                    <input type="text" class="form-control input-group-text encoded-sans fw-600 fs-55" name="searchTerm"
+                        placeholder="Busque por nome de projeto, termos ou URL GitHub" aria-label="Busque por nome de projeto, termos ou URL GitHub" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button class="search-btn d-flex justify-content-between align-items-center" type="submit">
+                            <img src="~/images/paper-plane@100x100.png" alt="Buscar" height="34" class="me-3" />
+                            <div class="text-center fs-5 me-5 encoded-sans fw-600">Buscar</div>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container content-container mt-5">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="w-75">
+                    <h5 class="mb-4 fw-bold text-dark-blue">Ajuda</h5>
+
+                    <div class="mb-3 pt-3">
+                        <h6 class="fw-bold text-dark-blue mb-3">Buscar projetos</h6>
+                        <p class="text-muted">Insira termos, palavras-chaves ou cole a URL completa do repositório GitHub a ser buscado para encontrar projetos.</p>
+                    </div>
+
+                    <div class="mb-3 pt-3">
+                        <h6 class="fw-bold text-dark-blue mb-3">Cadastrar projeto</h6>
+                        <p class="text-muted">Cole a URL completa do repositório GitHub para verificar se o projeto já foi cadastrado ou clicando em Cadastrar projeto, na página Gerenciar projetos.</p>
+                    </div>
+
+                    <div class="mb-3 pt-3">
+                        <h6 class="fw-bold text-dark-blue mb-3">Visualisar detalhes de um projeto</h6>
+                        <p class="text-muted">Clique no projeto desejado na lista ao lado para navegar até a página de detalhes do projeto.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                @if (Model != null && Model.Any()) 
+                {
+                    <h3 class="text-start mb-4 fw-bold text-dark-blue">Resultados da sua busca</h3>
+                    <div class="list-group mb-5">
+                        @foreach (var projeto in Model)
+                        {
+                            var categoria = projeto.Categoria.ToString().ToLower();
+                            <a href="@Url.Action("Detalhes", "Projetos", new { id = projeto.IdProjeto })" class="text-decoration-none">
+                                <div class="list-group-item d-flex justify-content-between align-items-center border-0 @categoria">
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-3 text-center">
+                                            <div class="icon-wrapper @categoria">
+                                                <i class="@TalentHub.Helpers.CategoriaHelper.GetIconForCategoria((CategoriaEnum)Enum.Parse(typeof(CategoriaEnum), categoria.ToString(), true))"></i>
+                                            </div>
+                                            <label class="fs-7 @categoria">@projeto.Categoria.GetDescription()</label>
+                                        </div>
+
+                                        <div class="">
+                                            <h5 class="mb-1 text-dark-blue encoded-sans">@projeto.NomeProjeto</h5>
+                                            <p class="mb-1 mt-2 text-muted">
+                                                @{
+                                                    var descricao = projeto.DescricaoProjeto;
+                                                    string descricaoResumida = "";
+                                                    if (!string.IsNullOrEmpty(descricao))
+                                                    {
+                                                        if (descricao.Length > 170)
+                                                        {
+                                                            descricaoResumida = descricao.Substring(0, 170) + "...";
+                                                        }
+                                                        else
+                                                        {
+                                                            descricaoResumida = descricao;
+                                                        }
+                                                    }
+                                                    @descricaoResumida
+                                                }
+                                            </p>
+                                        </div>
+
+                                        <div class="d-inline-flex align-items-center position-absolute end-0">
+                                            <span class="added-at me-2">Adicionado em @{
+                                                var dataCriacao = projeto.DataCriacao as DateTime?;
+                                                if (dataCriacao.HasValue)
+                                                {
+                                                    @dataCriacao.Value.ToString("dd/MM/yyyy")
+                                                }
+                                            }</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <div class="border-bottom my-4"></div>
+                        }
+                    </div>
+
+                    <div class="pagination d-flex justify-content-center gap-2">
+                        @if (Model.HasPreviousPage)
+                        {
+                            <a asp-action="ResultadosBusca" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-outline-primary">Anterior</a>
+                        }
+
+                        @for (var i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <a asp-action="ResultadosBusca" asp-route-pageNumber="@i" class="btn @(Model.PageIndex == i ? "btn-primary" : "btn-outline-primary")">@i</a>
+                        }
+
+                        @if (Model.HasNextPage)
+                        {
+                            <a asp-action="ResultadosBusca" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-outline-primary">Próximo</a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <h4 class="text-dark-blue fw-bold my-3">Nenhum projeto encontrado para os termos informados</h4>
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="d-flex mt-4">
+                            <a href="#" class="btn rounded-blue-btn" data-bs-toggle="modal" data-bs-target="#repoModal">
+                                <i class="fa-solid fa-circle-plus me-2"></i>
+                                Cadastrar projeto
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="repoModal" tabindex="-1" role="dialog" aria-labelledby="repoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form asp-controller="Projetos" asp-action="VerificarRepositorio" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="repoModalLabel">Criar novo projeto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="repoUrl" class="mb-1">URL do Repositório GitHub</label>
+                        <input type="text" class="form-control" id="repoUrl" name="repoUrl" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Verificar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/projetos.css" asp-append-version="true" />

@@ -1,0 +1,215 @@
+﻿@using TalentHub.Helpers
+@model PaginatedList<TalentHub.Models.Projeto>
+
+@{
+    ViewData["Title"] = "Gerenciar projetos";
+}
+
+<div class="home-content mb-5">
+    <div class="top-bar d-flex align-items-center">
+        <div class="w-100 text-center fs-1 fw-bold text-white mb-5">Gerenciar projetos</div>
+    </div>
+
+    <div class="search-container">
+        <div class="search-card py-4 px-4">
+            <form asp-controller="Projetos" asp-action="BuscarProjeto" method="get">
+                <div class="input-group d-flex align-items-center">
+                    <div class="input-group-prepend">
+                        <span>
+                            <img src="~/images/magnifier@100x100.png" alt="Buscar" height="50" />
+                        </span>
+                    </div>
+                    <input type="text" class="form-control input-group-text encoded-sans fw-600 fs-55" name="searchTerm"
+                        placeholder="Busque por nome de projeto, termos ou URL GitHub" aria-label="Busque por nome de projeto, termos ou URL GitHub" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button class="search-btn d-flex justify-content-between align-items-center" type="submit">
+                            <img src="~/images/paper-plane@100x100.png" alt="Buscar" height="34" class="me-3" />
+                            <div class="text-center fs-5 me-5 encoded-sans fw-600">Buscar</div>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container content-container mt-5">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="w-75">
+                <h5 class="mb-4 fw-bold text-dark-blue">Ajuda</h5>
+                
+                <div class="mb-3 pt-3">
+                    <h6 class="fw-bold text-dark-blue mb-3">Cadastrar projeto</h6>
+                    <p class="text-muted">Clique no botão Cadastrar projeto, no canto superior direito da sua lista de projetos e você poderá cadastrar um novo projeto.</p>
+                </div>
+
+                <div class="mb-3 pt-3">
+                    <h6 class="fw-bold text-dark-blue mb-3">Editar projetos</h6>
+                    <p class="text-muted">Clique no botão Editar em um dos projetos cadastrados por você na lista ao lado e você poderá editá-lo.</p>
+                </div>
+
+                <div class="mb-3 pt-3">
+                    <h6 class="fw-bold text-dark-blue mb-3">Deletar projetos</h6>
+                    <p class="text-muted">Clique no botão Deletar em um dos projetos cadastrados por você na lista ao lado e você poderá deletá-lo.</p>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h3 class="text-start fw-bold text-dark-blue">Projetos cadastrados por mim</h3>
+                @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="d-flex">
+                            <a href="#" class="btn rounded-blue-btn" data-bs-toggle="modal" data-bs-target="#repoModal">
+                                <i class="fa-solid fa-circle-plus me-2"></i>
+                                Novo projeto
+                            </a>
+                        </div>
+                    }
+            </div>
+            
+            <div class="list-group mb-5">
+                @foreach (var projeto in Model)
+                {
+                    var categoria = projeto.Categoria.ToString().ToLower();
+                    <a href="@Url.Action("Detalhes", "Projetos", new { id = projeto.IdProjeto })" class="text-decoration-none">
+                        <div class="list-group-item d-flex justify-content-between align-items-center border-0 @categoria">
+                            <div class="d-flex align-items-start me-3">
+                                <div class="me-3 text-center">
+                                    <div class="icon-wrapper @categoria">
+                                        <i class="@TalentHub.Helpers.CategoriaHelper.GetIconForCategoria((CategoriaEnum)Enum.Parse(typeof(CategoriaEnum), categoria.ToString(), true))"></i>
+                                    </div>
+                                    <label class="fs-7 @categoria">@projeto.Categoria.GetDescription()</label>
+                                    
+                                </div>
+
+                                <div class="">
+                                    <h5 class="mb-1 text-dark-blue encoded-sans">@projeto.NomeProjeto</h5>
+                                    <p class="mb-1 mt-2 text-muted">
+                                        @{
+                                            var descricao = projeto.DescricaoProjeto;
+                                            string descricaoResumida = "";
+                                            if (!string.IsNullOrEmpty(descricao))
+                                            {
+                                                if (descricao.Length > 170)
+                                                {
+                                                    descricaoResumida = descricao.Substring(0, 170) + "...";
+                                                }
+                                                else
+                                                {
+                                                    descricaoResumida = descricao;
+                                                }
+                                            }
+                                            @descricaoResumida
+                                        }
+                                    </p>
+                                </div>
+
+                                <div class="d-inline-flex align-items-center position-absolute end-0">
+                                    <span class="rating-number me-2">@projeto.NotaMedia.ToString("0.0")</span>
+                                    <div class="rating-stars d-inline-block">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= Math.Floor(projeto.NotaMedia))
+                                            {
+                                                <i class="fas fa-star text-warning"></i>
+                                            }
+                                            else if (i == Math.Ceiling(projeto.NotaMedia) && projeto.NotaMedia % 1 != 0)
+                                            {
+                                                <i class="fas fa-star-half-alt text-warning"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="far fa-star text-warning"></i>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex bottom-0">
+
+                                <a href="@Url.Action("Editar", "Projetos", new { id = projeto.IdProjeto })" class="btn me-2 btn-sm btn-outline-primary d-flex align-items-center">
+                                    <i class="fas fa-edit"></i>
+                                        Editar
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-danger d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#confirmDeleteProjectModal" data-id="@projeto.IdProjeto">
+                                    <i class="fas fa-trash"></i>
+                                        Apagar
+                                </a>
+                            </div>
+                        </div>
+                    </a>
+
+                    <div class="border-bottom my-4"></div>
+                }
+            </div>
+            <div class="pagination d-flex justify-content-center gap-2">
+                @if (Model.HasPreviousPage)
+                {
+                    <a asp-action="Gerenciar" asp-route-pageNumber="@(Model.PageIndex - 1)" class="btn btn-outline-primary">Anterior</a>
+                }
+
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    <a asp-action="Gerenciar" asp-route-pageNumber="@i" class="btn @(Model.PageIndex == i ? "btn-primary" : "btn-outline-primary")">@i</a>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <a asp-action="Gerenciar" asp-route-pageNumber="@(Model.PageIndex + 1)" class="btn btn-outline-primary">Próximo</a>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal fade" id="repoModal" tabindex="-1" role="dialog" aria-labelledby="repoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form asp-controller="Projetos" asp-action="VerificarRepositorio" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="repoModalLabel">Criar novo projeto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="repoUrl" class="mb-1">URL do Repositório GitHub</label>
+                        <input type="text" class="form-control" id="repoUrl" name="repoUrl" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Verificar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirmDeleteProjectModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+       
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Tem certeza de que deseja excluir este projeto?
+            </div>
+            <div class="modal-footer">
+                 <form id="deleteForm" asp-action="ApagarConfirmacao" method="post">
+                    <input type="hidden" id="deleteProjectId" name="id" value="" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Deletar</button>
+                </form>
+            </div>
+      
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="~/css/projetos.css" asp-append-version="true" />

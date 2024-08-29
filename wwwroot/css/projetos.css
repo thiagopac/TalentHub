@@ -1,0 +1,286 @@
+.search-card {
+  background-color: #fff;
+  border-radius: 14px;
+  box-shadow: 4px 10px 15px rgba(72, 181, 244, 0.3);
+  width: 80%;
+  padding: 1rem;
+  position: relative;
+  top: 50px;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -7rem;
+}
+
+.input-group-prepend {
+  margin: 0 10px 0 10px;
+}
+
+.input-group-text {
+  border: none;
+  background: transparent;
+  margin: 0 20px 0 0;
+  text-align: start;
+}
+
+.search-btn {
+  background-color: #367cff;
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  gap: 10px;
+  outline: none;
+}
+
+.search-btn:hover {
+  background-color: #2f6ce5;
+  color: white;
+}
+
+.rounded-blue-btn {
+  background-color: #367cff;
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  gap: 10px;
+  outline: none;
+}
+
+.rounded-blue-btn:hover {
+  background-color: #2f6ce5;
+  color: white;
+}
+
+.rounded-red-btn {
+  background-color: #f60000;
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  gap: 10px;
+  outline: none;
+}
+
+.rounded-red-btn:hover {
+  background-color: #f37575;
+  color: white;
+}
+
+.list {
+  list-style-type: none;
+  padding: 10px;
+  line-height: 24px;
+}
+
+.icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  color: white;
+}
+
+.added-at {
+  font-size: 0.8rem;
+  color: #a0a0a0;
+}
+
+.menu {
+  padding: 0 10px;
+}
+
+.menu-item {
+  font-size: 14px;
+  color: #007bff;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.menu-item i {
+  font-size: 24px;
+  display: block;
+}
+
+.menu-item hr {
+  margin-top: 16px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.menu-text {
+  text-align: center;
+}
+
+.project-details {
+  padding-left: 15px;
+  margin-left: -20px;
+  background-color: #fff;
+  border-radius: 10px;
+  margin-top: 80px;
+}
+
+.project-info h5 {
+  font-weight: 600;
+  color: #333;
+  margin-top: 20px;
+}
+
+.project-info p {
+  margin-bottom: 10px;
+}
+
+.reviews-section {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.review-item {
+  margin-bottom: 20px;
+}
+
+.fa-star,
+.fa-star-half-alt,
+.review-average {
+  color: #ff9d00;
+}
+
+.review-text p {
+  margin-bottom: 0.5rem;
+}
+
+.review-text small {
+  display: block;
+  color: #6c757d;
+}
+
+/* Cores e ícones para categorias */
+.saude {
+  color: #ff6f61;
+}
+
+.saude .icon-wrapper {
+  background-color: #ff6f61;
+}
+
+.tecnologia {
+  color: #fca020;
+}
+
+.tecnologia .icon-wrapper {
+  background-color: #fca020;
+}
+
+.financas {
+  color: #5bc0de;
+}
+
+.financas .icon-wrapper {
+  background-color: #5bc0de;
+}
+
+.projetossociais {
+  color: #5cb85c;
+}
+
+.projetossociais .icon-wrapper {
+  background-color: #5cb85c;
+}
+
+.turismo {
+  color: #d9534f;
+}
+
+.turismo .icon-wrapper {
+  background-color: #d9534f;
+}
+
+.lazer {
+  color: #428bca;
+}
+
+.lazer .icon-wrapper {
+  background-color: #428bca;
+}
+
+.educacao {
+  color: #8e44ad;
+}
+
+.educacao .icon-wrapper {
+  background-color: #8e44ad;
+}
+
+.esporte {
+  color: #27ae60;
+}
+
+.esporte .icon-wrapper {
+  background-color: #27ae60;
+}
+
+.ciencia {
+  color: #2980b9;
+}
+
+.ciencia .icon-wrapper {
+  background-color: #2980b9;
+}
+
+.meioambiente {
+  color: #2ecc71;
+}
+
+.meioambiente .icon-wrapper {
+  background-color: #2ecc71;
+}
+
+.comercio {
+  color: #d10a9f;
+}
+
+.comercio .icon-wrapper {
+  background-color: #d10a9f;
+}
+
+.outros {
+  color: #e16d80;
+}
+
+.outros .icon-wrapper {
+  background-color: #e16d80;
+}
+
+.icon-wrapper i {
+  color: white;
+}
+
+.btn-xs {
+  padding: 0.55rem 1rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  border-radius: 0.2rem;
+}
+
+.rating-number {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #9a9a9a;
+}
